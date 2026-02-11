@@ -45,3 +45,24 @@ if st.button("Refresh Library"):
         with st.expander(f"{book['title']} - {book['author']}"):
             st.write(f"**ISBN:** {book['isbn']}")
             st.write(f"**Description:** {book['description']}")
+
+# Search Bar
+st.subheader("🔍 Search in Library")
+search_query = st.text_input("Search by Title or Author")
+if st.button("Search"):
+    results = requests.get(f"{API_URL}/books/search?q={search_query}").json()
+    for book in results:
+        st.write(f"📖 {book['title']} by {book['author']}")
+
+# Remove Section (only foe logging users)
+if "token" in st.session_state:
+    st.divider()
+    st.subheader("🗑️ Librarian Actions")
+    isbn_to_delete = st.text_input("Enter ISBN to Remove")
+    if st.button("Delete Book"):
+        headers = {"Authorization": f"Bearer {st.session_state['token']}"}
+        d_res = requests.delete(f"{API_URL}/books/{isbn_to_delete}", headers=headers)
+        if d_res.status_code == 200:
+            st.success("Book deleted!")
+        else:
+            st.error("Could not delete book")

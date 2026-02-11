@@ -67,6 +67,23 @@ async def add_book(
 def list_books(db: Session = Depends(database.get_db)):
     return db.query(models.Book).all()
 
+# 1. Search Feature
+@app.get("/books/search", response_model=list[schemas.Book])
+def search_books(q: str, db: Session = Depends(database.get_db)):
+    return crud.search_books(db, query=q)
+
+# 2. Remove Feature (Search Librarian/Authorized for user)
+@app.delete("/books/{isbn}")
+def remove_book(
+    isbn: str, 
+    db: Session = Depends(database.get_db), 
+    token: str = Depends(oauth2_scheme) # Lock laga diya
+):
+    success = crud.delete_book(db, isbn)
+    if not success:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return {"message": "Book removed successfully"}
+
 
 
 

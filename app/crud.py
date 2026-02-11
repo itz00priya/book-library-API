@@ -31,3 +31,20 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+# search book
+def search_books(db: Session, query: str):
+    return db.query(models.Book).filter(
+        (models.Book.title.ilike(f"%{query}%")) | 
+        (models.Book.author.ilike(f"%{query}%"))
+    ).all()
+
+# Remove book
+def delete_book(db: Session, isbn: str):
+    db_book = db.query(models.Book).filter(models.Book.isbn == isbn).first()
+    if db_book:
+        db.delete(db_book)
+        db.commit()
+        return True
+    return False
