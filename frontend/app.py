@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 
-API_URL = "http://localhost:8000"
+API_URL ="http://app:8000"
 
 st.set_page_config(page_title="My Digital Library", layout="wide")
 
@@ -66,3 +66,19 @@ if "token" in st.session_state:
             st.success("Book deleted!")
         else:
             st.error("Could not delete book")
+
+        #delete button in refresh library
+if st.button("Refresh Library"):
+    books = requests.get(f"{API_URL}/books").json()
+    for book in books:
+        with st.expander(f"{book['title']} - {book['author']}"):
+            st.write(f"**ISBN:** {book['isbn']}")
+            st.write(f"**Description:** {book['description']}")
+            
+            # delete botton in every button
+            if st.button(f"🗑️ Remove Book {book['isbn']}", key=book['isbn']):
+                headers = {"Authorization": f"Bearer {st.session_state['token']}"}
+                del_res = requests.delete(f"{API_URL}/books/{book['isbn']}", headers=headers)
+                if del_res.status_code == 200:
+                    st.success("Book removed!")
+                    st.rerun() 

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from .database import Base
 
 class Book(Base):
@@ -16,3 +16,12 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+
+class Transaction(Base):
+    __tablename__ = "transactions"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    book_id = Column(Integer, ForeignKey("books.id"))
+    issue_date = Column(DateTime, default=datetime.utcnow)
+    return_date = Column(DateTime, nullable=True) 
+    status = Column(String, default="issued")     

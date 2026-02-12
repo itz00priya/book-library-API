@@ -85,6 +85,18 @@ def remove_book(
     return {"message": "Book removed successfully"}
 
 
+@app.post("/books/issue/{book_id}")
+def issue_a_book(book_id: int, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+    return crud.issue_book(db, user_id=current_user.id, book_id=book_id)
+
+@app.post("/books/return/{transaction_id}")
+def return_a_book(transaction_id: int, db: Session = Depends(get_db)):
+    success = crud.return_book(db, transaction_id=transaction_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    return {"message": "Book returned successfully"}
+
+
 
 
 

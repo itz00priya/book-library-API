@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from . import models, schemas
+from . import models, schemas, datetime
 
 
 def get_book(db: Session, book_id: int):
@@ -45,6 +45,24 @@ def delete_book(db: Session, isbn: str):
     db_book = db.query(models.Book).filter(models.Book.isbn == isbn).first()
     if db_book:
         db.delete(db_book)
+        db.commit()
+        return True
+    return False
+
+
+# Book Issue karne ka logic
+def issue_book(db: Session, user_id: int, book_id: int):
+    new_transaction = models.Transaction(user_id=user_id, book_id=book_id)
+    db.add(new_transaction)
+    db.commit()
+    return new_transaction
+
+# Book Return karne ka logic
+def return_book(db: Session, transaction_id: int):
+    transaction = db.query(models.Transaction).filter(models.Transaction.id == transaction_id).first()
+    if transaction:
+        transaction.return_date = datetime.utcnow()
+        transaction.status = "returned"
         db.commit()
         return True
     return False
