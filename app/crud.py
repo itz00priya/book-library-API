@@ -113,4 +113,4 @@ def get_user_transactions(db: Session, user_id: int):
             "issue_date": t.issue_date.strftime("%Y-%m-%d"),
             "status": t.status
         })
-    return result
+    return result         
