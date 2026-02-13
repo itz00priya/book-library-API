@@ -20,16 +20,16 @@ class Book(Base):
 
 # --- User Model ---
 # Stores member login details and hashed passwords
+
 class User(Base):
     __tablename__ = "users"
-
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-
-    # Relationship to track books borrowed by this user
+    # Default role is 'member'
+    role = Column(String, default="member") 
+    
     transactions = relationship("Transaction", back_populates="user")
-
 # --- Transaction Model ---
 # Tracks the borrowing (issuing) and returning of books
 class Transaction(Base):
