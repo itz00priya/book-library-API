@@ -142,3 +142,15 @@ def return_a_book(transaction_id: int, db: Session = Depends(get_db)):
 @app.get("/users/me/books")
 def get_my_borrowed_books(current_user = Depends(get_current_user), db: Session = Depends(get_db)):
     return crud.get_user_transactions(db, user_id=current_user.id)
+
+def role_required(required_role: str):
+    def role_checker(current_user: models.User = Depends(get_current_user)):
+        if current_user.role != required_role and current_user.role != "admin":
+            raise HTTPException(status_code=403, detail="Operation not permitted")
+        return current_user
+    return role_checker
+
+# Example: Only Admin or Librarian can delete a book
+@app.delete("/books/{isbn}")
+def delete_book(isbn: str, db: Session = Depends(get_db), admin_user = Depends(role_required("librarian"))):
+    return crud.delete_book(db, isbn)
