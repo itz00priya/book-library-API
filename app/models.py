@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from .database import Base
-
+'''
 # --- Book Model ---
 # Represents the catalog of books in the library
 class Book(Base):
@@ -13,6 +13,17 @@ class Book(Base):
     author = Column(String)
     isbn = Column(String, unique=True, index=True) # Unique ISBN as primary identifier
     description = Column(Text, nullable=True)
+    '''
+class Book(Base):
+    __tablename__ = "books"
+
+    id = Column(Integer, primary_key=True, index=True)
+    isbn = Column(String, unique=True, index=True)
+    title = Column(String)
+    author = Column(String)
+    description = Column(Text, nullable=True)
+    category = Column(String, default="General")
+    thumbnail = Column(String, nullable=True)
 
     # Relationship to track transactions for this book
     transactions = relationship("Transaction", back_populates="book")
