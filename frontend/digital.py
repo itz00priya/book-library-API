@@ -20,3 +20,8 @@ else:
     if st.sidebar.button("Logout"):
         del st.session_state["token"]
         st.rerun()
+
+
+@app.post("/")
+def home():
+    return {"message": "welcome to the Book Library API!"}        
