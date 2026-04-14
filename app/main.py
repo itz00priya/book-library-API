@@ -16,7 +16,7 @@ models.Base.metadata.create_all(bind=database.engine)
 
 @app.post("/")
 def home():
-    return {"message": "Book Library API is open!"}
+    return {"message": "welcome to the Book Library API!"}
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

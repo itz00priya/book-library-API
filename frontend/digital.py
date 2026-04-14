@@ -22,6 +22,4 @@ else:
         st.rerun()
 
 
-@app.post("/")
-def home():
-    return {"message": "welcome to the Book Library API!"}        
+      
