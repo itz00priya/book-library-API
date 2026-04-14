@@ -21,5 +21,6 @@ else:
         del st.session_state["token"]
         st.rerun()
 
-
-      
+@app.post("/")
+def home():
+    return {"message": "booklib-api is running!"}
